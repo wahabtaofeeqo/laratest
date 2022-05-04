@@ -10,12 +10,14 @@ use App\Models\Comment;
 use App\Http\Requests\CreateArticle;
 use App\Http\Requests\CommentRequest;
 
+
 class ArticleController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
+     * @OA\Get(
+     *     path="/articles",
+     *     @OA\Response(response="200", description="Display a listing of articles.")
+     * )
      */
     public function index()
     {
@@ -23,11 +25,12 @@ class ArticleController extends Controller
         return $this->sendPaginator('Articles', $articles);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+
+     /**
+     * @OA\Post(
+     *     path="/articles",
+     *     @OA\Response(response="200", description="Create new articles.")
+     * )
      */
     public function store(CreateArticle $request)
     {
@@ -36,11 +39,11 @@ class ArticleController extends Controller
         return $this->sendResponse('Article Created', $article);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     /**
+     * @OA\Get(
+     *     path="/articles/{articleId}",
+     *     @OA\Response(response="200", description="Display a particular Article.")
+     * )
      */
     public function show($id)
     {
@@ -61,10 +64,10 @@ class ArticleController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @OA\Delete(
+     *     path="/articles",
+     *     @OA\Response(response="200", description="Delete an article.")
+     * )
      */
     public function destroy($id)
     {
@@ -73,6 +76,13 @@ class ArticleController extends Controller
         return $this->sendMessage('Article Deleted');
     }
 
+
+     /**
+     * @OA\Get(
+     *     path="/articles/{id}",
+     *     @OA\Response(response="200", description="Increate article likes")
+     * )
+     */
     public function likeArticle($id)
     {
         $article = Article::findOrFail($id);
@@ -82,6 +92,12 @@ class ArticleController extends Controller
         return $this->sendMessage('Operation Succeeded');
     }
 
+     /**
+     * @OA\Get(
+     *     path="/articles",
+     *     @OA\Response(response="200", description="Increment article views")
+     * )
+     */
     public function viewArticle($id)
     {
         $article = Article::findOrFail($id);
@@ -91,6 +107,13 @@ class ArticleController extends Controller
         return $this->sendMessage('Operation Succeeded');
     }
 
+
+     /**
+     * @OA\Get(
+     *     path="/articles",
+     *     @OA\Response(response="200", description="Display paginated comments of an article")
+     * )
+     */
     public function comments($id)
     {
         $article = Article::findOrFail($id);
@@ -98,6 +121,13 @@ class ArticleController extends Controller
         return $this->sendPaginator('Comments', $comments);
     }
 
+
+     /**
+     * @OA\Post(
+     *     path="/articles",
+     *     @OA\Response(response="200", description="Adds comment to an article")
+     * )
+     */
     public function addComment($id, CommentRequest $request)
     {
         $data = $request->validated();

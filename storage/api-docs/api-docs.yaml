@@ -1,0 +1,254 @@
+openapi: '3.0.0'
+info:
+  description: This is a simple API
+  version: 1.0.0
+  title: Article API
+
+  contact:
+    email: you@your-company.com
+
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+
+tags:
+- name: Article
+  description: Article model operations
+- name: Comments
+  description: Article Comment
+
+paths:
+
+  /articles:
+    get:
+      tags:
+      - Article
+      summary: get articles
+      operationId: paginateArticle
+      description: Search the available articles in the database
+
+      parameters:
+      - in: query
+        name: page
+        description: pass the current page
+        required: false
+        type: integer
+
+      responses:
+        200:
+          description: Articles
+          content:
+            application/json:
+              schema:
+                type: array
+                $ref: '#/components/schemas/Article'
+
+        400:
+          description: bad input parameter
+
+    post:
+      tags:
+      - Article
+      summary: adds new article
+      operationId: addArticle
+      description: Adds an article to the system
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: article
+        description: Article item to add
+        schema:
+          $ref: '#/components/schemas/Article'
+      responses:
+        200:
+          description: Article created
+        422:
+          description: Unprocessable Entity
+
+  /articles/{articleId}:
+    get:
+      tags:
+        - Article
+      summary: Get an Article
+      operationId: getArticle
+      description: ''
+      parameters:
+      - in: path
+        type: integer
+        required: true
+
+      produces:
+        - application/json
+
+      responses:
+        200:
+          description: Article
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/Article'
+        404:
+          description: Model not found
+
+  /articles/{articleId}/comments:
+    get:
+      tags:
+        - Comments
+      summary: Get Article Comments
+      operationId: getComments
+      description: 'Paginated list of comments'
+      parameters:
+      - in: path
+        type: integer
+        required: true
+
+      produces:
+        - application/json
+
+      responses:
+        200:
+          description: Comments
+          content:
+            application/json:
+              schema:
+                type: array
+                $ref: '#/components/schemas/Comment'
+    post:
+      tags:
+        - Comments
+      summary: Adds Comment
+      operationId: 'addComment'
+      description: ''
+      parameters:
+      - in: body
+        schema:
+          type: object
+          $ref: '#/comments/schemas/Comment'
+
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Your message has been successfully sent
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ApiResponse'
+
+  /articles/{articleId}/like:
+    get:
+      tags:
+        - Article
+      summary: Like Article
+      operationId: likeArticle
+      description: 'Like an article'
+      parameters:
+      - in: path
+        type: integer
+        required: true
+
+      produces:
+        - application/json
+
+      responses:
+        200:
+          description: Operation succeeded
+          schema:
+            type: object
+            item:
+              $ref: '#/components/schemas/ApiResponse'
+
+  /articles/{articleId}/view:
+    get:
+      tags:
+        - Article
+      summary: View Article
+      operationId: viewArticle
+      description: 'view an article'
+      parameters:
+      - in: path
+        type: integer
+        required: true
+
+      produces:
+        - application/json
+
+      responses:
+        200:
+          description: Operation succeeded
+          schema:
+            type: object
+            item:
+              $ref: '#/components/schemas/ApiResponse'
+
+components:
+  schemas:
+    Article:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        cover:
+          type: string
+        likes:
+          type: integer
+        views:
+          type: integer
+        body:
+          type: string
+    Tag:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        article_id:
+          type: integer
+        label:
+          type: string
+        url:
+          type: string
+    Comment:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        article_id:
+          type: integer
+        subject:
+          type: string
+        body:
+          type: string
+
+    ApiResponse:
+      type: object
+      properties:
+        status:
+          type: boolean
+        message:
+          type: string
+        data:
+          type: object
+
+    PaginatedResponse:
+      type: object
+      properties:
+        status:
+          type: boolean
+        message:
+          type: string
+        data:
+          type: array
+
+# Added by API Auto Mocking Plugin
+host: virtserver.swaggerhub.com
+basePath: /wahabtaofeeqo/Article API/1.0.0
+schemes:
+ - https
