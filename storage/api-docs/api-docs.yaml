@@ -41,7 +41,8 @@ paths:
             application/json:
               schema:
                 type: array
-                $ref: '#/components/schemas/Article'
+                items:
+                  $ref: '#/components/schemas/Article'
 
         400:
           description: bad input parameter
@@ -65,6 +66,11 @@ paths:
       responses:
         200:
           description: Article created
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ApiResponse'
         422:
           description: Unprocessable Entity
 
@@ -158,10 +164,11 @@ paths:
       responses:
         200:
           description: Operation succeeded
-          schema:
-            type: object
-            item:
-              $ref: '#/components/schemas/ApiResponse'
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ApiResponse'
 
   /articles/{articleId}/view:
     get:
@@ -181,10 +188,11 @@ paths:
       responses:
         200:
           description: Operation succeeded
-          schema:
-            type: object
-            item:
-              $ref: '#/components/schemas/ApiResponse'
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ApiResponse'
 
 components:
   schemas:
@@ -236,16 +244,30 @@ components:
           type: string
         data:
           type: object
+          default: null
 
     PaginatedResponse:
       type: object
       properties:
         status:
           type: boolean
+          default: true
         message:
           type: string
         data:
           type: array
+          default: []
+        meta:
+          type: object
+          properties:
+            per_page:
+              type: integer
+            current_page:
+              type: integer
+            total:
+              type: integer
+            last_page:
+              type: integer
 
 # Added by API Auto Mocking Plugin
 host: virtserver.swaggerhub.com
